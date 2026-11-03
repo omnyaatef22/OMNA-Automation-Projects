@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OMNA Automation Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="OMNA Automation Studio: n8n automation projects for real businesses — clinics, restaurants, schools, real estate, events, finance and social media.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a studio hub of project tiles; each project opens as its own page with a live-try panel, a playable run of its workflows and a node explorer. */
+:root{
+  --bg:#F2F4F8; --surface:#FFFFFF; --surface-2:#E9EDF4; --ink:#0D1828; --muted:#566275; --line:#D5DCE7;
+  --accent:#2350D8; --accent-ink:#FFFFFF; --accent-soft:#E2E9FD; --sun:#EE6A3A;
+  --ok:#047857; --ok-soft:#DCF2E9; --warn:#B45309; --warn-soft:#FCEED8; --bad:#B91C1C; --bad-soft:#FBE2E2;
+  --code:#0F1B2C; --code-ink:#D8E1F0; --p:var(--accent);
+  --f-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A111B; --surface:#111A27; --surface-2:#182335; --ink:#E7ECF4; --muted:#93A0B3; --line:#26334A;
+  --accent:#7D9CFF; --accent-ink:#0A111B; --accent-soft:#1B2A50; --sun:#F58A5C;
+  --ok:#3CC293; --ok-soft:#0F3329; --warn:#F2A54C; --warn-soft:#3A2913; --bad:#F27777; --bad-soft:#3E1A1D;
+  --code:#060B12; --code-ink:#C9D5E8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A111B; --surface:#111A27; --surface-2:#182335; --ink:#E7ECF4; --muted:#93A0B3; --line:#26334A;
+  --accent:#7D9CFF; --accent-ink:#0A111B; --accent-soft:#1B2A50; --sun:#F58A5C;
+  --ok:#3CC293; --ok-soft:#0F3329; --warn:#F2A54C; --warn-soft:#3A2913; --bad:#F27777; --bad-soft:#3E1A1D;
+  --code:#060B12; --code-ink:#C9D5E8; color-scheme:dark}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);-webkit-font-smoothing:antialiased}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} [hidden]{display:none!important}
+a{color:var(--accent)} button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.06;margin:0;text-wrap:balance;letter-spacing:-.02em}
+h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800} h3{font-size:1.1rem;font-weight:700}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font:500 .74rem/1 var(--f-mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.note{font-size:.86rem;color:var(--muted)} .muted{color:var(--muted)} .tnum{font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:800 1.1rem/1 var(--f-display);white-space:nowrap}
+.brand span{font-weight:500;color:var(--muted)}
+.crumb{display:flex;align-items:center;gap:8px;font-weight:600;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.crumb a{color:var(--muted);text-decoration:none;font-weight:500}
+.iconbtn{flex:none;margin-left:auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font:500 .73rem/1.3 var(--f-mono);background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.acc{background:var(--accent-soft);color:var(--accent)}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid transparent;background:var(--accent);color:var(--accent-ink);font-weight:600;cursor:pointer;text-decoration:none}
+.btn:hover{filter:brightness(1.07)} .btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)} .btn.ghost:hover{background:var(--surface-2);filter:none}
+.btn.sm{padding:6px 11px;font-size:.86rem;border-radius:8px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+
+/* hub */
+.hubhero{background:var(--surface);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hubhero .wrap{padding-block:64px 52px;position:relative}
+.hubhero h1{font-size:clamp(2.5rem,6vw,4.6rem);font-weight:800;letter-spacing:-.04em;max-width:15ch}
+.hubhero h1 em{font-style:normal;color:var(--accent)}
+.hubhero .lede{margin-top:16px;font-size:1.12rem;color:var(--muted);max-width:56ch}
+.orbit{position:absolute;right:-60px;top:-40px;width:420px;height:420px;pointer-events:none;opacity:.9}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:28px 0 18px}
+.filters button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.86rem;cursor:pointer}
+.filters button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding-bottom:64px}
+.tile{position:relative;display:flex;flex-direction:column;gap:10px;padding:22px;border-radius:18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;transition:transform .2s,box-shadow .2s,border-color .2s;overflow:hidden;min-width:0}
+.tile:hover{transform:translateY(-4px);border-color:var(--tc);box-shadow:0 20px 40px -28px rgba(13,24,40,.5)}
+.tile .em{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--tc) 14%,transparent);color:var(--tc);font:800 1.05rem/1 var(--f-display)}
+.tile .cat{font:500 .72rem/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--tc)}
+.tile b{font:800 1.35rem/1.1 var(--f-display);letter-spacing:-.015em}
+.tile p{font-size:.92rem;color:var(--muted)}
+.tile .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:8px;font-size:.82rem;color:var(--muted)}
+.tile .ext{position:absolute;top:18px;right:18px}
+@media (max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.orbit{opacity:.35}}
+@media (max-width:620px){.grid{grid-template-columns:1fr}}
+
+/* project */
+.phero{background:var(--surface);border-bottom:1px solid var(--line)}
+.phero .wrap{display:grid;grid-template-columns:1.25fr .9fr;gap:36px;padding-block:44px;align-items:start}
+.phero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;letter-spacing:-.035em}
+.phero .by{font:600 .9rem/1 var(--f-body);color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:8px}
+.phero .lede{margin-top:14px;font-size:1.08rem;color:var(--muted);max-width:56ch}
+.stats{display:flex;gap:22px;flex-wrap:wrap;margin-top:22px}
+.stats div{display:flex;flex-direction:column} .stats b{font:800 1.7rem/1 var(--f-display)} .stats span{font-size:.8rem;color:var(--muted)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.steps li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
+.steps .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--p) 14%,transparent);color:var(--p);font:700 .85rem/1 var(--f-mono)}
+.steps b{display:block;font-size:.98rem} .steps span{font-size:.88rem;color:var(--muted)}
+.how{padding:22px}
+section.band{padding-block:44px}
+section.band+section.band{border-top:1px solid var(--line)}
+.sechead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px 28px;margin-bottom:20px}
+.sechead p{max-width:60ch;color:var(--muted);margin-top:8px}
+.try{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.tcard{padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.tcard .kind{display:flex;align-items:center;gap:10px}
+.tcard .kind i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font:600 .72rem/1 var(--f-mono);font-style:normal;background:color-mix(in srgb,var(--p) 14%,transparent);color:var(--p)}
+.fprev{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.fprev label{font-size:.82rem;font-weight:600;display:flex;flex-direction:column;gap:4px}
+.fprev .in{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:.85rem;font-weight:400}
+.mono{font-family:var(--f-mono)}
+.copyrow{display:flex;gap:6px;align-items:center;min-width:0}
+.copyrow code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:7px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--line);font:400 .78rem/1.3 var(--f-mono)}
+/* run + explorer */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tab{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:500;font-size:.9rem}
+.tab[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.explorer{display:grid;grid-template-columns:minmax(0,1fr) 320px;overflow:hidden}
+.canvas{overflow:auto;background-color:var(--bg);background-image:radial-gradient(var(--line) 1px,transparent 1.2px);background-size:20px 20px;min-height:440px;max-height:640px;border-right:1px solid var(--line)}
+.canvas svg{display:block}
+.node{cursor:pointer} .node rect.box{fill:var(--surface);stroke:var(--line);stroke-width:1.2;transition:stroke .2s,fill .2s}
+.node:hover rect.box,.node.sel rect.box{stroke:var(--accent);stroke-width:2}
+.node.run rect.box{stroke:var(--p);stroke-width:2.5;fill:color-mix(in srgb,var(--p) 10%,var(--surface))}
+.node.dim{opacity:.35}
+.node text{fill:var(--ink);font:500 11.5px var(--f-body)} .node text.ty{fill:var(--muted);font:400 9.5px var(--f-mono)} .node .gl{font:600 9px var(--f-mono)}
+.edge{fill:none;stroke:var(--muted);stroke-width:1.4;opacity:.5} .edge.ai{stroke-dasharray:4 4;opacity:.4} .edge.run{stroke:var(--p);opacity:1;stroke-width:2.2}
+.side{display:flex;flex-direction:column;min-width:0}
+.side .ctrl{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.side select{width:100%;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--bg)}
+.log{list-style:none;margin:0;padding:10px 0;flex:1;overflow:auto;background:var(--code);color:var(--code-ink);font:400 .78rem/1.45 var(--f-mono);min-height:200px;max-height:460px}
+.log li{display:grid;grid-template-columns:14px 1fr;gap:8px;padding:3px 14px}
+.log li i{width:8px;height:8px;border-radius:50%;margin-top:5px;background:#5B7BD8}
+.log li .k{color:#fff} .log li .v{color:#8FA3C2}
+.log .empty{display:block;color:#8FA3C2;padding:6px 14px}
+.inspect{padding:16px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line)}
+@media (max-width:900px){.phero .wrap{grid-template-columns:1fr}.explorer{grid-template-columns:1fr}.canvas{border-right:0;border-bottom:1px solid var(--line)}}
+footer.site{padding-block:32px;border-top:1px solid var(--line);background:var(--surface)}
+footer.site .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:.9rem;opacity:0;transition:.25s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#" aria-label="OMNA Automation Studio home"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="14" cy="16" r="10" fill="none" stroke="var(--ink)" stroke-width="3.4"/><circle cx="23.5" cy="7" r="4.2" fill="var(--sun)"/></svg>OMNA <span>Studio</span></a>
+  <div class="crumb" id="crumb"></div>
+  <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch light or dark theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+</div></header>
+
+<main id="app"></main>
+
+<footer class="site"><div class="wrap"><div><b style="font-family:var(--f-display)">OMNA Automation Studio</b><p class="note" style="margin-top:4px">Built with n8n by Omneya. Live links work while the OMNA n8n server is online.</p></div><div class="chips"><span class="pill">n8n</span><span class="pill">Groq</span><span class="pill">Gemini</span><span class="pill">WhatsApp</span><span class="pill">Telegram</span><span class="pill">Google Workspace</span></div></div></footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const N8N_BASE="https://zesty-charting-overflow.ngrok-free.dev/";
+const MODE="hub"; /* "hub" or a project slug */
+const HUB_URL="https://omnyaatef22.github.io/OMNA-Automation-Projects/";
+const REPOS={"nile-smile-hub": "OMNA-Nile-Smile-AI-Hub", "nile-smile-lite": "OMNA-Nile-Smile-Lite-Bot", "talabat-mini": "OMNA-Talabat-Mini", "bayt-leads": "OMNA-Bayt-Leads", "hr-radar": "OMNA-HR-Radar", "seat": "OMNA-Seat-Events", "hader": "OMNA-Hader-Attendance", "fatora-flow": "OMNA-Fatora-Flow", "post-pilot": "OMNA-Post-Pilot"};
+const repoUrl=slug=>"https://omnyaatef22.github.io/"+REPOS[slug]+"/";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const sleep=ms=>new Promise(r=>setTimeout(r,matchMedia("(prefers-reduced-motion: reduce)").matches?0:ms));
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2400)}
+const store={get(k,d){try{const v=localStorage.getItem("omna:"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("omna:"+k,JSON.stringify(v))}catch(e){}}};
+(function(){const t=store.get("theme",null);if(t)document.documentElement.dataset.theme=t;$("#themeBtn").onclick=()=>{const r=document.documentElement;const d=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.dataset.theme=d?"light":"dark";store.set("theme",r.dataset.theme)}})();
+
+/* ===== project catalogue (copy written per project) ===== */
+const P=[
+ {slug:"nile-smile-hub",folder:"Nile Smile Dental · AI Support Hub",name:"Nile Smile Dental",sub:"AI Support Hub",cat:"Healthcare",color:"#0E8A7E",em:"NS",
+  tag:"One AI receptionist for WhatsApp, Telegram, Messenger and Instagram, with a staff desk on Telegram for anything a human should handle.",
+  ch:["WhatsApp","Telegram","Messenger","Instagram","Groq","Gemini","Google Sheets"],
+  steps:[["Every channel, one inbox","Messages from WhatsApp, Telegram, Messenger and Instagram are normalised and sent to one AI brain."],["AI triage","Groq classifies each message: question, booking, problem or small talk, with a keyword fallback if the AI is down."],["Answer, book or hand off","Questions are answered from the clinic's knowledge base, bookings are checked against free slots, and problems become tickets for the staff group."],["Staff desk on Telegram","Staff take or resolve tickets with buttons and reply to patients with /reply, on whatever channel the patient used."],["Self-monitoring","Error alerts with throttling, an hourly heartbeat, SLA escalations every 10 minutes, a 21:15 digest and a built-in test suite."]]},
+ {slug:"nile-smile-lite",folder:"Nile Smile Dental · Lite Bot",name:"Nile Smile Dental",sub:"Lite Bot",cat:"Healthcare",color:"#0E8A7E",em:"NL",
+  tag:"A lighter clinic assistant: one AI agent on WhatsApp and Telegram that answers from the clinic's documents, books appointments and alerts staff.",
+  ch:["WhatsApp","Telegram","Gemini","Groq","Google Sheets"],
+  steps:[["Patient writes","On WhatsApp or Telegram, in Arabic or English."],["AI agent with tools","Answers from the clinic knowledge base, checks booking rules, saves appointments or opens a ticket."],["Staff replies with /reply","Tickets reach the staff group; a /reply command answers the patient on their channel."],["Nothing waits too long","Every 30 minutes open tickets are checked and staff are reminded."]]},
+ {slug:"talabat-mini",folder:"Talabat Mini · Restaurant Orders",name:"Talabat Mini",sub:"Restaurant Orders",cat:"Food & delivery",color:"#E0532F",em:"TM",
+  tag:"Customers order in plain words on WhatsApp or Telegram. AI turns it into an order from the menu, the kitchen works it from Telegram buttons.",
+  ch:["WhatsApp","Telegram","AI","Google Sheets"],
+  steps:[["Order in your own words","“2 shawarma and a pepsi to Nasr City.” AI reads it against the menu and delivery zones."],["Draft, then confirm","The customer sees the order and total, then confirms or cancels."],["Kitchen on Telegram","Confirmed orders post to the kitchen group with status buttons; each tap updates the customer."],["Kitchen watch","Every 5 minutes stuck orders alert the manager and stale drafts expire."]]},
+ {slug:"bayt-leads",folder:"Bayt Leads · Real Estate",name:"Bayt Leads",sub:"Real Estate",cat:"Real estate",color:"#9A5B13",em:"BL",
+  tag:"Leads from Facebook ads, the website and WhatsApp are scored, matched to listings and followed up until a viewing is booked.",
+  ch:["Facebook Lead Ads","Web form","WhatsApp","Google Calendar","AI"],
+  steps:[["Three ways in","Facebook Lead Ads, a website form or a WhatsApp message. AI extracts budget, area and unit type."],["Score and match","Each lead is checked, de-duplicated, scored and matched to available listings."],["Matches on WhatsApp","WhatsApp leads get their best matches instantly; sales get an alert."],["Book a viewing","Sales book through a form that checks the lead and unit and creates the calendar event."],["Hourly follow-ups","Automatic WhatsApp follow-ups, sales reminders and manager escalation."]]},
+ {slug:"hr-radar",folder:"HR Radar · Recruiting",name:"HR Radar",sub:"Recruiting",cat:"HR",color:"#2350D8",em:"HR",
+  tag:"Applications are validated, scored fairly by AI against the job, and strong candidates get an interview slot straight from the calendar.",
+  ch:["Web form","AI","Google Calendar","Gmail","Google Sheets"],
+  steps:[["Apply in a minute","Name, contact, position, experience and a PDF CV, with consent."],["Checked and de-duplicated","Bad submissions get a fix-it email; repeat applicants are told it's already received."],["Fair AI scoring","The CV text is scored against the job with a fairness-focused prompt, then validated."],["Interview or not","Strong candidates get the first free calendar slot and an invite; others get a polite email or go on hold for HR."],["17:00 shortlist","Every workday HR receives the shortlist."]]},
+ {slug:"seat",folder:"Seat · Event Registration",name:"Seat",sub:"Event Registration",cat:"Events",color:"#7A3FD1",em:"SE",
+  tag:"Registration with InstaPay proof, AI payment checks, tickets by email, a waitlist that fills itself and a Telegram door bot for check-in.",
+  ch:["Web form","AI","Gmail","Telegram","Google Sheets"],
+  steps:[["Register and pay","The form takes the InstaPay reference and a payment screenshot."],["AI reads the payment","The screenshot is checked against the reference; unclear ones go to the organizer."],["Ticket or waitlist","Within capacity you get a ticket by email; when full you join the waitlist."],["Reminders and waitlist","Every 15 minutes: reminders a day and an hour before, and freed seats go to the waitlist."],["Door check-in","Staff send the ticket code to the Telegram door bot to check people in."]]},
+ {slug:"hader",folder:"Hader · School Attendance",name:"Hader",sub:"School Attendance",cat:"Education",color:"#1E7D3A",em:"HA",
+  tag:"Teachers submit attendance in a 20-second form. Parents of absent or late students hear on WhatsApp, with SMS as a fallback.",
+  ch:["Web form","WhatsApp","SMS","Gmail","Google Sheets"],
+  steps:[["Teacher submits","Class, period, date and the absent or late student IDs."],["Validated once","IDs are checked against the class and duplicate submissions are blocked."],["Parents told","Absent and late students' parents get a WhatsApp message, or an SMS if WhatsApp fails."],["Daily and weekly","10:00 reminders for missing attendance, 15:00 absence streaks to the counselor, Thursday weekly report."]]},
+ {slug:"fatora-flow",folder:"Fatora Flow · Invoices",name:"Fatora Flow",sub:"Invoices",cat:"Finance",color:"#0F6E9E",em:"FF",
+  tag:"Invoices arrive by email or Telegram, AI reads them, rules check them, and finance approves with one tap.",
+  ch:["Gmail","Telegram","AI","Google Sheets"],
+  steps:[["Send the invoice","As an email attachment or a file on Telegram."],["AI reads it","Vendor, number, date, amounts and tax are extracted and validated."],["Checks","Duplicate invoice numbers and vendor limits are caught before approval."],["One-tap approval","Finance approves or rejects on Telegram; unclear ones go to a review queue."],["09:00 digest","Every workday morning: what's pending, approved and rejected."]]},
+ {slug:"post-pilot",folder:"Post Pilot · Social Media",name:"Post Pilot",sub:"Social Media",cat:"Marketing",color:"#C42D6B",em:"PP",
+  tag:"AI drafts posts from your content plan, you approve them on Telegram, and they publish to Facebook and LinkedIn on time.",
+  ch:["AI","Telegram","Facebook","LinkedIn","Google Sheets"],
+  steps:[["Plan in a sheet","Topics, briefs and brand rules live in the content queue."],["AI drafts","Every 30 minutes due topics are drafted and checked against the rules."],["Approve on Telegram","Buttons or commands to approve or send back for a redraft."],["Publish on time","Every 10 minutes approved posts go out to the Facebook Page or LinkedIn."],["20:00 stats","Facebook stats are saved and a daily summary is posted."]]},
+];
+const EXTERNAL=[
+ {name:"OMNA",sub:"People Portal",cat:"HR",color:"#2350D8",em:"OM",url:"https://omnyaatef22.github.io/Full-HR-Automated-system/",tag:"Ask HR, get coached, apply, and watch the recruiter agent screen applications."},
+ {name:"Dawaa",sub:"Pharmacy",cat:"Healthcare",color:"#0B7A6E",em:"DW",url:"https://omnyaatef22.github.io/Dawaa-Pharmacy-Assistant/",tag:"WhatsApp medicine requests and prescriptions, pharmacist approvals on Telegram."},
+];
+
+let DATA=null; const dataReady=(MODE==="hub"?Promise.resolve(null):fetch(MODE+".json")).then(r=>r.ok?r.json():null).then(j=>DATA=j).catch(()=>null);
+
+/* ===== hub ===== */
+let filter="All";
+function hub(){
+  $("#crumb").innerHTML="";
+  const cats=["All",...new Set(P.map(p=>p.cat).concat(EXTERNAL.map(e=>e.cat)))];
+  const items=P.map(p=>({...p,href:repoUrl(p.slug)})).concat(EXTERNAL.map(e=>({...e,href:e.url,ext:true})));
+  const shown=items.filter(i=>filter==="All"||i.cat===filter);
+  $("#app").innerHTML=`<section class="hubhero"><svg class="orbit" viewBox="0 0 420 420" aria-hidden="true"><circle cx="210" cy="210" r="150" fill="none" stroke="var(--line)" stroke-width="2"/><circle cx="210" cy="210" r="95" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 8"/><circle cx="210" cy="210" r="60" fill="none" stroke="var(--ink)" stroke-width="16"/><g id="orb"><circle cx="360" cy="210" r="16" fill="var(--sun)"/></g></svg>
+  <div class="wrap"><div class="eyebrow">OMNA · Automation Studio</div><h1 style="margin-top:14px">Automations that run the <em>busy part</em> of a business.</h1>
+  <p class="lede">${items.length} working projects built with n8n: clinics, pharmacies, restaurants, schools, real estate, events, finance and marketing. Open any project to see what it does, watch a run, and try it live.</p></div></section>
+  <div class="wrap"><div class="filters" role="group" aria-label="Filter by industry">${cats.map(c=>`<button type="button" aria-pressed="${c===filter}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}</div>
+  <div class="grid">${shown.map(i=>`<a class="tile" href="${esc(i.href)}"  style="--tc:${i.color}"><div class="em">${esc(i.em)}</div><span class="cat">${esc(i.cat)}</span><b>${esc(i.name)}<br><span style="font-weight:600;color:var(--muted);font-size:1rem">${esc(i.sub)}</span></b><p>${esc(i.tag)}</p><div class="foot"><span>by OMNA</span><span>Open project →</span></div></a>`).join("")}</div></div>`;
+  document.querySelectorAll(".filters button").forEach(b=>b.onclick=()=>{filter=b.dataset.c;hub()});
+  spin();
+}
+let spinRaf; function spin(){ cancelAnimationFrame(spinRaf); const g=$("#orb"); if(!g||matchMedia("(prefers-reduced-motion: reduce)").matches) return; const t0=performance.now(); const f=t=>{ if(!document.body.contains(g)) return; g.setAttribute("transform",`rotate(${((t-t0)/80)%360} 210 210)`); spinRaf=requestAnimationFrame(f)}; spinRaf=requestAnimationFrame(f); }
+
+/* ===== project page ===== */
+const KIND={formTrigger:"Form",chatTrigger:"Chat",webhook:"Webhook",telegramTrigger:"Telegram",whatsAppTrigger:"WhatsApp",gmailTrigger:"Gmail",facebookLeadAdsTrigger:"Facebook Leads",scheduleTrigger:"Schedule",errorTrigger:"On error",manualTrigger:"Manual",n8nTrigger:"On n8n start",executeWorkflowTrigger:"Called by workflow"};
+const CAT=t=>/Trigger$|^webhook$/.test(t)?"trigger":/agent|chainLlm|lmChat|embeddings|vectorStore|memory|outputParser|textSplitter|documentDefault|informationExtractor|googleGemini|openAi|toolWorkflow|agentTool/i.test(t)?"ai":/^(if|switch|filter|splitInBatches|merge|wait)$/.test(t)?"logic":/googleSheets|googleDrive|googleCalendar|dataTable|postgres/i.test(t)?"data":/telegram|whatsApp|gmail|form$|respondToWebhook|emailSend|facebook|linkedIn|twilio|httpRequest/i.test(t)?"msg":"code";
+const GLY={trigger:["var(--sun)","T"],ai:["var(--accent)","AI"],code:["var(--muted)","JS"],logic:["var(--warn)","IF"],data:["var(--ok)","DB"],msg:["var(--p)","@"]};
+function prettyType(t){return KIND[t]||t.replace(/([a-z])([A-Z])/g,"$1 $2").replace(/^./,c=>c.toUpperCase())}
+
+async function project(p){
+  document.documentElement.style.setProperty("--p",p.color);
+  $("#crumb").innerHTML=`<a href="${HUB_URL}">Projects</a><span class="muted">/</span><span>${esc(p.name)} · ${esc(p.sub)}</span>`;
+  $("#app").innerHTML=`<p class="wrap note" style="padding-block:40px">Loading ${esc(p.name)}…</p>`;
+  await dataReady;
+  const wfs=(DATA?.projects?.[p.folder])||[];
+  const ordered=[...wfs].sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+  const nodes=ordered.flatMap(w=>w.nodes.filter(n=>n.t!=="stickyNote"));
+  const trig=ordered.flatMap(w=>w.nodes.filter(n=>CAT(n.t)==="trigger"&&n.t!=="respondToWebhook").map(n=>({...n,wf:w.name})));
+  const aiCount=nodes.filter(n=>CAT(n.t)==="ai").length;
+  $("#app").innerHTML=`<section class="phero"><div class="wrap"><div>
+    <div class="eyebrow" style="color:var(--p)">${esc(p.cat)}</div><h1 style="margin-top:12px">${esc(p.name)}<br><span style="color:var(--muted);font-weight:700">${esc(p.sub)}</span></h1>
+    <div class="by"><svg width="18" height="18" viewBox="0 0 30 30" aria-hidden="true"><circle cx="14" cy="16" r="10" fill="none" stroke="var(--ink)" stroke-width="3.4"/><circle cx="23.5" cy="7" r="4.2" fill="var(--sun)"/></svg>by OMNA</div>
+    <p class="lede">${esc(p.tag)}</p><div class="chips" style="margin-top:16px">${p.ch.map(c=>`<span class="pill">${esc(c)}</span>`).join("")}</div>
+    <div class="stats"><div><b class="tnum">${ordered.length||"—"}</b><span>workflows</span></div><div><b class="tnum">${nodes.length||"—"}</b><span>nodes</span></div><div><b class="tnum">${trig.length||"—"}</b><span>triggers</span></div><div><b class="tnum">${aiCount||"—"}</b><span>AI nodes</span></div></div></div>
+    <div class="panel how"><div class="eyebrow" style="margin-bottom:14px">How it works</div><ol class="steps">${p.steps.map((s,i)=>`<li><span class="n">${i+1}</span><div><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div></li>`).join("")}</ol></div></div></section>
+  <section class="band"><div class="wrap"><div class="sechead"><div><div class="eyebrow">Try it</div><h2 style="margin-top:8px">Every way in</h2><p>Each trigger that starts this project. Forms open live on the OMNA n8n server; chat and messaging channels are reached through their apps.</p></div></div><div class="try" id="try"></div></div></section>
+  <section class="band" style="background:var(--surface)"><div class="wrap"><div class="sechead"><div><div class="eyebrow">Watch a run</div><h2 style="margin-top:8px">The workflows</h2><p>Drawn from the live n8n files. Pick a starting trigger and press Play to light up the path a run takes, or click any node to read about it.</p></div></div>
+    <div class="tabs" role="tablist" id="wfTabs"></div><div class="panel explorer"><div class="canvas" id="canvas"></div><div class="side"><div class="ctrl"><label class="note" for="startSel">Start from</label><select id="startSel"></select><div style="display:flex;gap:8px"><button class="btn sm" id="play" type="button">Play run</button><button class="btn ghost sm" id="dl" type="button">Download JSON</button></div></div><ol class="log" id="log"><li class="empty">Press Play to follow a run.</li></ol><div class="inspect" id="inspect"></div></div></div></div></section>`;
+  renderTry(p,trig);
+  if(!ordered.length){ $("#wfTabs").innerHTML=""; $("#canvas").innerHTML=`<p class="note" style="padding:20px">Workflow data is not available on this copy of the site.</p>`; return; }
+  $("#wfTabs").innerHTML=ordered.map((w,i)=>`<button class="tab" role="tab" type="button" data-i="${i}">${esc(w.name.split(" · ").slice(1).join(" · ")||w.name)}</button>`).join("");
+  $("#wfTabs").querySelectorAll(".tab").forEach(t=>t.onclick=()=>draw(p,ordered[t.dataset.i]));
+  draw(p,ordered[ordered.length>1&&/1 ·|Inbound/.test(ordered[0].name)?0:0]);
+}
+function renderTry(p,trig){
+  const base=(DATA?.base||N8N_BASE).replace(/\/?$/,"/");
+  const seen=new Set(); const cards=[];
+  for(const t of trig){ const k=prettyType(t.t);
+    if(t.t==="formTrigger"&&t.form){ const url=base+"form/"+t.form.path;
+      cards.push(`<div class="panel tcard"><div class="kind"><i>FORM</i><div><b>${esc(t.form.title||t.n)}</b><div class="note">${esc(t.wf)}</div></div></div>${t.form.desc?`<p class="note">${esc(t.form.desc)}</p>`:""}<div class="fprev">${t.form.fields.slice(0,7).map(f=>`<label><span>${esc(f.l)}${f.req?' <span style="color:var(--bad)">*</span>':""}</span><span class="in">${f.ty==="dropdown"&&f.opts.length?esc(f.opts.slice(0,3).join(" · "))+(f.opts.length>3?" …":""):f.ty==="file"?"Upload "+esc(f.acc||"file"):f.ty==="checkbox"?"☐ "+esc(f.opts[0]||""):esc(f.ph||f.ty)}</span></label>`).join("")}</div><a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open the live form ↗</a><p class="note">Opens on the OMNA n8n server. ngrok may show a one-time “Visit site” page first.</p></div>`); continue; }
+    if(t.t==="webhook"&&t.hook){ if(seen.has("hook"+t.hook.path)) continue; seen.add("hook"+t.hook.path); const url=base+"webhook/"+t.hook.path;
+      cards.push(`<div class="panel tcard"><div class="kind"><i>API</i><div><b>Webhook · ${esc(t.hook.method)}</b><div class="note">${esc(t.n)}</div></div></div><div class="copyrow"><code>${esc(url)}</code><button class="btn ghost sm" type="button" data-copy="${esc(url)}">Copy</button></div><p class="note">Used by Meta (Messenger and Instagram) to deliver messages to this project.</p></div>`); continue; }
+    if(seen.has(t.t)) continue; seen.add(t.t);
+    const txt={telegramTrigger:"Message the bot or tap its buttons in the team's Telegram group.",whatsAppTrigger:"Customers message the business WhatsApp number.",gmailTrigger:"Emails with attachments arriving in the finance inbox.",facebookLeadAdsTrigger:"New leads from a Facebook Lead Ads form.",scheduleTrigger:"Runs on its own: "+trig.filter(x=>x.t==="scheduleTrigger").map(x=>x.d).filter(Boolean).join(" · "),errorTrigger:"Fires when any workflow in the project fails, so errors are classified and reported.",executeWorkflowTrigger:"Called by the project's other workflows.",n8nTrigger:"Runs when the n8n server starts.",manualTrigger:"Run by hand from n8n, e.g. the test suite."}[t.t]||"";
+    const tag={telegramTrigger:"TG",whatsAppTrigger:"WA",gmailTrigger:"@",facebookLeadAdsTrigger:"FB",scheduleTrigger:"⏱",errorTrigger:"!",executeWorkflowTrigger:"↳",n8nTrigger:"▶",manualTrigger:"▶"}[t.t]||"T";
+    cards.push(`<div class="panel tcard"><div class="kind"><i>${tag}</i><div><b>${esc(k)}</b><div class="note">${esc(t.wf)}</div></div></div><p class="note">${esc(txt)}</p></div>`);
+  }
+  $("#try").innerHTML=cards.join("")||`<p class="note">No triggers found.</p>`;
+  document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.copy);toast("Copied")}catch(e){toast("Select the address to copy it")}});
+}
+function wrap2(s,max=19){const w=s.split(" ");const L=[""];for(const x of w){if((L.at(-1)+" "+x).trim().length>max&&L.at(-1))L.push(x);else L[L.length-1]=(L.at(-1)+" "+x).trim()}if(L.length>2){L.length=2;L[1]=L[1].slice(0,max-1)+"…"}return L}
+let cur=null, playing=false;
+function draw(p,w){ cur=w; document.querySelectorAll("#wfTabs .tab").forEach(t=>t.setAttribute("aria-selected",t.textContent===(w.name.split(" · ").slice(1).join(" · ")||w.name)));
+  const ns=w.nodes.filter(n=>n.t!=="stickyNote"); const W=152,H=56,SX=1.15,SY=1.15,PAD=50;
+  const minX=Math.min(...ns.map(n=>n.x*SX)),minY=Math.min(...ns.map(n=>n.y*SY)); const pos={}; ns.forEach(n=>pos[n.n]={x:n.x*SX-minX+PAD,y:n.y*SY-minY+PAD});
+  const wd=Math.max(...Object.values(pos).map(q=>q.x))+W+PAD, ht=Math.max(...Object.values(pos).map(q=>q.y))+H+PAD;
+  let edges=""; w.edges.forEach(([s,t,ai],i)=>{const a=pos[s],b=pos[t];if(!a||!b)return;let d;
+    if(ai){const x1=a.x+W/2,y1=a.y,x2=b.x+W/2,y2=b.y+H;d=`M${x1},${y1} C${x1},${y1-40} ${x2},${y2+40} ${x2},${y2}`}
+    else{const x1=a.x+W,y1=a.y+H/2,x2=b.x,y2=b.y+H/2; if(x2>x1+10){const c=Math.max(40,(x2-x1)/2);d=`M${x1},${y1} C${x1+c},${y1} ${x2-c},${y2} ${x2},${y2}`}else{const low=Math.max(a.y,b.y)+H+30;d=`M${x1},${y1} C${x1+50},${y1} ${x1+50},${low} ${x1},${low} L${x2},${low} C${x2-50},${low} ${x2-50},${y2} ${x2},${y2}`}}
+    edges+=`<path class="edge${ai?" ai":""}" data-e="${i}" d="${d}"/>`});
+  const nodes=ns.map(n=>{const q=pos[n.n];const [col,gl]=GLY[CAT(n.t)];const L=wrap2(n.n);return `<g class="node" tabindex="0" role="button" aria-label="${esc(n.n)}" data-n="${esc(n.n)}" transform="translate(${q.x},${q.y})"><rect class="box" width="${W}" height="${H}" rx="10"/><rect x="9" y="${H/2-11}" width="22" height="22" rx="6" fill="${col}" opacity=".16"/><text class="gl" x="20" y="${H/2+3}" text-anchor="middle" fill="${col}">${gl}</text>${L.map((l,i)=>`<text x="38" y="${(L.length===1?24:18)+i*13}">${esc(l)}</text>`).join("")}<text class="ty" x="38" y="${H-9}">${esc(prettyType(n.t)).slice(0,24)}</text></g>`}).join("");
+  $("#canvas").innerHTML=`<svg width="${Math.round(wd*.78)}" height="${Math.round(ht*.78)}" viewBox="0 0 ${wd} ${ht}" role="img" aria-label="${esc(w.name)}">${edges}${nodes}</svg>`;
+  $("#canvas").querySelectorAll(".node").forEach(el=>{const f=()=>inspect(w,el.dataset.n,el);el.onclick=f;el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f()}}});
+  const starts=ns.filter(n=>CAT(n.t)==="trigger"&&n.t!=="respondToWebhook");
+  $("#startSel").innerHTML=starts.map(n=>`<option>${esc(n.n)}</option>`).join("");
+  $("#play").onclick=()=>play(w); $("#dl").onclick=()=>download(w);
+  $("#log").innerHTML=`<li class="empty">Press Play to follow a run.</li>`;
+  $("#inspect").innerHTML=`<b>${esc(w.name)}</b><span class="note">${ns.length} nodes · ${w.active?"active":"inactive"} in n8n. Click a node to read about it.</span>`;
+}
+function describe(n){ const bits=[]; const k=prettyType(n.t); if(n.d) bits.push(n.d.replace(/^=/,"").replace(/\{\{[^}]*\}\}/g,"…").slice(0,180)); if(n.form) bits.push("Form: "+(n.form.title||"")+" · "+n.form.fields.length+" fields"); if(n.hook) bits.push(n.hook.method+" /"+n.hook.path); return {k,txt:bits.join(" · ")} }
+function inspect(w,name,el){ const n=w.nodes.find(x=>x.n===name); document.querySelectorAll(".node.sel").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); const {k,txt}=describe(n);
+  const ins=w.edges.filter(e=>e[1]===name).map(e=>e[0]), outs=w.edges.filter(e=>e[0]===name).map(e=>e[1]);
+  $("#inspect").innerHTML=`<span class="eyebrow">${esc(k)}</span><b>${esc(n.n)}</b>${txt?`<span class="note">${esc(txt)}</span>`:""}${ins.length?`<span class="note"><b>From:</b> ${ins.map(esc).join(", ")}</span>`:""}${outs.length?`<span class="note"><b>To:</b> ${outs.map(esc).join(", ")}</span>`:""}`; }
+async function play(w){ if(playing) return; playing=true; $("#play").disabled=true;
+  const start=$("#startSel").value; const svg=$("#canvas svg"); svg.querySelectorAll(".node").forEach(g=>g.classList.add("dim")); svg.querySelectorAll(".edge").forEach(e=>e.classList.remove("run"));
+  $("#log").innerHTML=""; const seen=new Set([start]); let frontier=[start]; let stepN=0;
+  while(frontier.length&&stepN<60){ const next=[];
+    for(const name of frontier){ const g=svg.querySelector(`.node[data-n="${CSS.escape(name)}"]`); if(g){g.classList.remove("dim");g.classList.add("run");g.scrollIntoView({block:"nearest",inline:"nearest",behavior:"smooth"})}
+      const n=w.nodes.find(x=>x.n===name); const {k,txt}=describe(n); const li=document.createElement("li"); li.innerHTML=`<i></i><div><span class="k">${esc(name)}</span> <span class="v">· ${esc(txt||k)}</span></div>`; $("#log").appendChild(li); $("#log").scrollTop=1e6; stepN++;
+      w.edges.forEach((e,i)=>{ if(e[0]===name&&!e[2]){ svg.querySelector(`.edge[data-e="${i}"]`)?.classList.add("run"); if(!seen.has(e[1])){seen.add(e[1]);next.push(e[1])} } });
+      // AI sub-nodes attached to this node
+      w.edges.forEach((e,i)=>{ if(e[1]===name&&e[2]){ svg.querySelector(`.edge[data-e="${i}"]`)?.classList.add("run"); const s=svg.querySelector(`.node[data-n="${CSS.escape(e[0])}"]`); s?.classList.remove("dim"); } });
+      await sleep(260); }
+    frontier=next; }
+  const li=document.createElement("li"); li.innerHTML=`<i style="background:#3CC293"></i><div><span class="k">Done</span> <span class="v">· ${stepN} nodes on this path${frontier.length?" (stopped early)":""}</span></div>`; $("#log").appendChild(li);
+  playing=false; $("#play").disabled=false; }
+function download(w){ const f=DATA?.files?.[w.name]; if(!f){toast("Download is not available on this copy");return} const blob=new Blob([JSON.stringify(f,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=w.name.replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"-")+".json"; document.body.appendChild(a); a.click(); a.remove(); }
+
+/* ===== router ===== */
+function route(){ const h=MODE==="hub"?location.hash.slice(1):MODE; const p=MODE==="hub"?null:P.find(x=>x.slug===h); scrollTo(0,0); if(p){document.title=`${p.name} · ${p.sub} by OMNA`;project(p)} else {document.title="OMNA Automation Studio";document.documentElement.style.removeProperty("--p");hub()} }
+addEventListener("hashchange",route); route();
+</script>
+</body>
+</html>
