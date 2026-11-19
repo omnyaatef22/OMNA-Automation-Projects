@@ -205,6 +205,7 @@ const P=[
 const EXTERNAL=[
  {name:"OMNA",sub:"People Portal",cat:"HR",color:"#2350D8",em:"OM",url:"https://omnyaatef22.github.io/Full-HR-Automated-system/",tag:"Ask HR, get coached, apply, and watch the recruiter agent screen applications."},
  {name:"Dawaa",sub:"Pharmacy",cat:"Healthcare",color:"#0B7A6E",em:"DW",url:"https://omnyaatef22.github.io/Dawaa-Pharmacy-Assistant/",tag:"WhatsApp medicine requests and prescriptions, pharmacist approvals on Telegram."},
+ {name:"Fenjan Café",sub:"Order by DM",cat:"Food & delivery",color:"#0E7C7B",em:"FJ",url:"https://omnyaatef22.github.io/OMNA-Fenjan-Cafe/",tag:"Coffee orders by Messenger and Instagram DM in Arabic, English or Franco; kitchen updates the customer from Telegram."},
 ];
 
 let DATA=null; const dataReady=(MODE==="hub"?Promise.resolve(null):fetch(MODE+".json")).then(r=>r.ok?r.json():null).then(j=>DATA=j).catch(()=>null);
@@ -218,7 +219,7 @@ function hub(){
   const shown=items.filter(i=>filter==="All"||i.cat===filter);
   $("#app").innerHTML=`<section class="hubhero"><svg class="orbit" viewBox="0 0 420 420" aria-hidden="true"><circle cx="210" cy="210" r="150" fill="none" stroke="var(--line)" stroke-width="2"/><circle cx="210" cy="210" r="95" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 8"/><circle cx="210" cy="210" r="60" fill="none" stroke="var(--ink)" stroke-width="16"/><g id="orb"><circle cx="360" cy="210" r="16" fill="var(--sun)"/></g></svg>
   <div class="wrap"><div class="eyebrow">OMNA · Automation Studio</div><h1 style="margin-top:14px">Automations that run the <em>busy part</em> of a business.</h1>
-  <p class="lede">${items.length} working projects built with n8n: clinics, pharmacies, restaurants, schools, real estate, events, finance and marketing. Open any project to see what it does, watch a run, and try it live.</p></div></section>
+  <p class="lede">${items.length} working projects built with n8n: clinics, pharmacies, restaurants, cafés, schools, real estate, events, finance and marketing. Open any project to see what it does, watch a run, and try it live.</p></div></section>
   <div class="wrap"><div class="filters" role="group" aria-label="Filter by industry">${cats.map(c=>`<button type="button" aria-pressed="${c===filter}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}</div>
   <div class="grid">${shown.map(i=>`<a class="tile" href="${esc(i.href)}"  style="--tc:${i.color}"><div class="em">${esc(i.em)}</div><span class="cat">${esc(i.cat)}</span><b>${esc(i.name)}<br><span style="font-weight:600;color:var(--muted);font-size:1rem">${esc(i.sub)}</span></b><p>${esc(i.tag)}</p><div class="foot"><span>by OMNA</span><span>Open project →</span></div></a>`).join("")}</div></div>`;
   document.querySelectorAll(".filters button").forEach(b=>b.onclick=()=>{filter=b.dataset.c;hub()});
